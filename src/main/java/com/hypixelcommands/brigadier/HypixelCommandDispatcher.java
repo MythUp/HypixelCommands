@@ -217,10 +217,6 @@ public class HypixelCommandDispatcher {
         chat.addChild(command("officer"));
         root.addChild(chat);
 
-        CommandNode lang = new CommandNode("lang", "language");
-        lang.addChild(command("french", "english", "german"));
-        root.addChild(lang);
-
         CommandNode friend = new CommandNode("friend");
         friend.addChild(command("accept", arg("player", ParameterType.PLAYER)));
         friend.addChild(command("add", arg("player", ParameterType.PLAYER)));
@@ -285,6 +281,15 @@ public class HypixelCommandDispatcher {
         guild.addChild(command("transfer", arg("player", ParameterType.PLAYER)));
         guild.addChild(command("unmute", argChoice("target", ParameterType.PLAYER_OR_STRING, List.of("everyone"))));
         root.addChild(guild);
+
+        CommandNode lang = new CommandNode("lang", "language");
+        lang.addChild(command("french", "english", "german"));
+        root.addChild(lang);
+
+        CommandNode msg = new CommandNode("msg", "message", "tell", "w", "whisper");
+        msg.withArgument(arg("player", ParameterType.PLAYER));
+        msg.withArgument(arg("message", ParameterType.STRING));
+        root.addChild(msg);
 
         CommandNode party = new CommandNode("party");
         party.addChild(command("accept", arg("player", ParameterType.PLAYER)));
