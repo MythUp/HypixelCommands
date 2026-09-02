@@ -316,6 +316,11 @@ public class HypixelCommandDispatcher {
         quality.addChild(command("off", "low", "medium", "high", "extreme"));
         root.addChild(quality);
 
+        CommandNode tpa = new CommandNode("tpa");
+        tpa.withArgument(arg("player", ParameterType.PLAYER));
+        tpa.addChild(command("tpaccept", arg("player", ParameterType.PLAYER)));
+        root.addChild(tpa);
+
         return root;
     }
 
