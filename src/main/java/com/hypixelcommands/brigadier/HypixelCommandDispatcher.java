@@ -279,7 +279,9 @@ public class HypixelCommandDispatcher {
         party.addChild(command("leave"));
         party.addChild(command("list"));
         party.addChild(command("mute"));
-        party.addChild(command("poll"));
+        guild.addChild(command("poll",
+                arg("question", ParameterType.STRING),
+                repeatableArg("answer", ParameterType.STRING)));
         party.addChild(command("private"));
         party.addChild(command("promote", arg("player", ParameterType.PLAYER)));
         party.addChild(command("settings", arg("setting", ParameterType.STRING, List.of("allinvite", "mute", "private"))));
