@@ -207,14 +207,10 @@ public class HypixelCommandDispatcher {
         CommandNode root = new CommandNode("root");
 
         CommandNode chat = new CommandNode("ch", "chat");
-        chat.addChild(command("a"));
-        chat.addChild(command("all"));
-        chat.addChild(command("p"));
-        chat.addChild(command("party"));
-        chat.addChild(command("g"));
-        chat.addChild(command("guild"));
-        chat.addChild(command("o"));
-        chat.addChild(command("officer"));
+        chat.addChild(command("a", "all"));
+        chat.addChild(command("p", "party"));
+        chat.addChild(command("g", "guild"));
+        chat.addChild(command("o", "online"));
         root.addChild(chat);
 
         CommandNode friend = new CommandNode("friend");
@@ -233,7 +229,7 @@ public class HypixelCommandDispatcher {
         friend.addChild(command("requests", arg("page", ParameterType.STRING)));
         root.addChild(friend);
 
-        CommandNode guild = new CommandNode("guild");
+        CommandNode guild = new CommandNode("g", "guild");
         guild.addChild(command("accept"));
         guild.addChild(command("chat", arg("message", ParameterType.STRING)));
         guild.addChild(command("create", arg("name", ParameterType.STRING)));
@@ -318,7 +314,7 @@ public class HypixelCommandDispatcher {
 
         CommandNode tpa = new CommandNode("tpa");
         tpa.withArgument(arg("player", ParameterType.PLAYER));
-        tpa.addChild(command("tpaccept", arg("player", ParameterType.PLAYER)));
+        tpa.addChild(command("accept", arg("player", ParameterType.PLAYER)));
         root.addChild(tpa);
 
         CommandNode status = new CommandNode("status");
