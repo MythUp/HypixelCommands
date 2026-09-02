@@ -321,6 +321,10 @@ public class HypixelCommandDispatcher {
         tpa.addChild(command("tpaccept", arg("player", ParameterType.PLAYER)));
         root.addChild(tpa);
 
+        CommandNode status = new CommandNode("status");
+        status.addChild(command("online", "away", "busy", "offline"));
+        root.addChild(status);
+
         return root;
     }
 
