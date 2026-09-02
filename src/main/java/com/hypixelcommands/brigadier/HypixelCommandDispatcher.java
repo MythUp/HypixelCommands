@@ -312,6 +312,10 @@ public class HypixelCommandDispatcher {
         party.addChild(command("warp"));
         root.addChild(party);
 
+        CommandNode quality = new CommandNode("particlequality", "quality", "pc");
+        quality.addChild(command("off", "low", "medium", "high", "extreme"));
+        root.addChild(quality);
+
         return root;
     }
 
