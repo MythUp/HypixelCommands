@@ -7,10 +7,12 @@ import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class HypixelCommandDispatcher {
     private static final CommandNode ROOT = buildRoot();
@@ -119,9 +121,10 @@ public class HypixelCommandDispatcher {
         StringRange range = StringRange.between(start, raw.length());
 
         List<Suggestion> suggestions = new ArrayList<>();
-        for (CommandNode child : currentNode.getChildren().values()) {
-            String childName = child.getName();
-            if (childName.toLowerCase(Locale.ROOT).startsWith(currentWord.toLowerCase(Locale.ROOT))) {
+        Set<String> seen = new HashSet<>();
+        for (Map.Entry<String, CommandNode> entry : currentNode.getChildren().entrySet()) {
+            String childName = entry.getKey();
+            if (seen.add(childName.toLowerCase(Locale.ROOT)) && childName.toLowerCase(Locale.ROOT).startsWith(currentWord.toLowerCase(Locale.ROOT))) {
                 suggestions.add(new Suggestion(range, childName));
             }
         }
@@ -203,7 +206,7 @@ public class HypixelCommandDispatcher {
     private static CommandNode buildRoot() {
         CommandNode root = new CommandNode("root");
 
-        CommandNode chat = new CommandNode("chat");
+        CommandNode chat = new CommandNode("ch", "chat");
         chat.addChild(command("a"));
         chat.addChild(command("all"));
         chat.addChild(command("p"));
@@ -213,6 +216,10 @@ public class HypixelCommandDispatcher {
         chat.addChild(command("o"));
         chat.addChild(command("officer"));
         root.addChild(chat);
+
+        CommandNode lang = new CommandNode("lang", "language");
+        lang.addChild(command("french", "english", "german"));
+        root.addChild(lang);
 
         CommandNode friend = new CommandNode("friend");
         friend.addChild(command("accept", arg("player", ParameterType.PLAYER)));
@@ -303,9 +310,14 @@ public class HypixelCommandDispatcher {
         return root;
     }
 
-    private static CommandNode command(String name, ParameterSpec... args) {
+    private static CommandNode command(String... names) {
+        return new CommandNode(names);
+    }
+
+    private static CommandNode command(String name, ParameterSpec first, ParameterSpec... rest) {
         CommandNode node = new CommandNode(name);
-        for (ParameterSpec arg : args) {
+        node.withArgument(first);
+        for (ParameterSpec arg : rest) {
             node.withArgument(arg);
         }
         return node;
@@ -330,16 +342,27 @@ public class HypixelCommandDispatcher {
 
     private static final class CommandNode {
         private final String name;
+        private final List<String> aliases = new ArrayList<>();
         private final Map<String, CommandNode> children = new LinkedHashMap<>();
         private final List<ParameterSpec> parameters = new ArrayList<>();
         private int depth;
 
-        private CommandNode(String name) {
-            this.name = name;
+        private CommandNode(String... names) {
+            if (names == null || names.length == 0) {
+                throw new IllegalArgumentException("CommandNode requires at least one name");
+            }
+            this.name = names[0];
+            for (String alias : names) {
+                addAlias(alias);
+            }
         }
 
         public String getName() {
             return name;
+        }
+
+        public List<String> getNames() {
+            return aliases;
         }
 
         public Map<String, CommandNode> getChildren() {
@@ -356,7 +379,16 @@ public class HypixelCommandDispatcher {
 
         public CommandNode addChild(CommandNode child) {
             child.depth = this.depth + 1;
-            children.put(child.getName().toLowerCase(Locale.ROOT), child);
+            for (String lookupName : child.getNames()) {
+                children.put(lookupName.toLowerCase(Locale.ROOT), child);
+            }
+            return this;
+        }
+
+        public CommandNode addAlias(String alias) {
+            if (alias != null && !alias.isBlank()) {
+                aliases.add(alias);
+            }
             return this;
         }
 
