@@ -203,6 +203,17 @@ public class HypixelCommandDispatcher {
     private static CommandNode buildRoot() {
         CommandNode root = new CommandNode("root");
 
+        CommandNode chat = new CommandNode("chat");
+        chat.addChild(command("a"));
+        chat.addChild(command("all"));
+        chat.addChild(command("p"));
+        chat.addChild(command("party"));
+        chat.addChild(command("g"));
+        chat.addChild(command("guild"));
+        chat.addChild(command("o"));
+        chat.addChild(command("officer"));
+        root.addChild(chat);
+
         CommandNode friend = new CommandNode("friend");
         friend.addChild(command("accept", arg("player", ParameterType.PLAYER)));
         friend.addChild(command("add", arg("player", ParameterType.PLAYER)));
