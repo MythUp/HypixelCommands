@@ -168,6 +168,27 @@ public class HypixelCommandDispatcher {
         friend.addChild(command("requests", arg("page", ParameterType.STRING)));
         root.addChild(friend);
 
+        CommandNode party = new CommandNode("party");
+        party.addChild(command("accept", arg("player", ParameterType.PLAYER)));
+        party.addChild(command("chat"));
+        party.addChild(command("demote", arg("player", ParameterType.PLAYER)));
+        party.addChild(command("disband"));
+        party.addChild(command("invite", arg("player", ParameterType.PLAYER)));
+        party.addChild(command("kick", arg("player", ParameterType.PLAYER)));
+        party.addChild(command("kickoffline"));
+        party.addChild(command("leave"));
+        party.addChild(command("list"));
+        party.addChild(command("mute"));
+        party.addChild(command("poll"));
+        party.addChild(command("private"));
+        party.addChild(command("promote", arg("player", ParameterType.PLAYER)));
+        party.addChild(command("settings", arg("setting", ParameterType.STRING, List.of("allinvite", "mute", "private"))));
+        party.addChild(command("transfer", arg("player", ParameterType.PLAYER)));
+        party.addChild(command("warp"));
+
+
+        root.addChild(party);
+
         return root;
     }
 
