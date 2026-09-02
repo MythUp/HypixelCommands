@@ -283,7 +283,7 @@ public class HypixelCommandDispatcher {
         root.addChild(guild);
 
         CommandNode lang = new CommandNode("lang", "language");
-        lang.addChild(command("french", "english", "german"));
+        lang.addChild(command("chinese_simplified", "chinese_traditional", "czech", "danish", "dutch", "english", "finnish", "french", "german", "hungarian", "italian", "japanese", "korean", "norwegian", "pirate", "polish", "portuguese_br", "portuguese_pt", "romanian", "russian", "spanish", "swedish", "turkish", "ukrainian"));
         root.addChild(lang);
 
         CommandNode msg = new CommandNode("msg", "message", "tell", "w", "whisper");
@@ -302,7 +302,7 @@ public class HypixelCommandDispatcher {
         party.addChild(command("leave"));
         party.addChild(command("list"));
         party.addChild(command("mute"));
-        guild.addChild(command("poll",
+        party.addChild(command("poll",
                 arg("question", ParameterType.STRING),
                 repeatableArg("answer", ParameterType.STRING)));
         party.addChild(command("private"));
