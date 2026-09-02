@@ -168,6 +168,55 @@ public class HypixelCommandDispatcher {
         friend.addChild(command("requests", arg("page", ParameterType.STRING)));
         root.addChild(friend);
 
+        CommandNode guild = new CommandNode("guild");
+        guild.addChild(command("accept"));
+        guild.addChild(command("chat", arg("message", ParameterType.STRING)));
+        guild.addChild(command("create", arg("name", ParameterType.STRING)));
+        guild.addChild(command("demote", arg("player", ParameterType.PLAYER)));
+        guild.addChild(command("disband"));
+        guild.addChild(command("discord"));
+        guild.addChild(command("help"));
+        guild.addChild(command("history"));
+        guild.addChild(command("info"));
+        guild.addChild(command("invite", arg("player", ParameterType.PLAYER)));
+        guild.addChild(command("join", arg("guild", ParameterType.STRING)));
+        guild.addChild(command("kick",
+                arg("player", ParameterType.PLAYER),
+                arg("reason", ParameterType.STRING)));
+        guild.addChild(command("leave"));
+        guild.addChild(command("log"));
+        guild.addChild(command("member"));
+        guild.addChild(command("members"));
+        guild.addChild(command("menu"));
+        guild.addChild(command("motd"));
+        guild.addChild(command("mute",
+                arg("player", ParameterType.PLAYER),
+                arg("time", ParameterType.STRING)));
+        guild.addChild(command("mypermissions"));
+        guild.addChild(command("notifications"));
+        guild.addChild(command("officerchat"));
+        guild.addChild(command("online"));
+        guild.addChild(command("onlinemode"));
+        guild.addChild(command("party"));
+        guild.addChild(command("permissions"));
+        guild.addChild(command("promote", arg("player", ParameterType.PLAYER)));
+        guild.addChild(command("quest"));
+        guild.addChild(command("rename", arg("name", ParameterType.STRING)));
+        guild.addChild(command("setrank",
+                arg("player", ParameterType.PLAYER),
+                arg("rank", ParameterType.STRING)));
+        guild.addChild(command("settings",
+                arg("setting", ParameterType.STRING),
+                arg("value", ParameterType.STRING)));
+        guild.addChild(command("slow"));
+        guild.addChild(command("tag"));
+        guild.addChild(command("tagcolor"));
+        guild.addChild(command("toggle"));
+        guild.addChild(command("top"));
+        guild.addChild(command("transfer", arg("player", ParameterType.PLAYER)));
+        guild.addChild(command("unmute", arg("player", ParameterType.PLAYER)));
+        root.addChild(guild);
+
         CommandNode party = new CommandNode("party");
         party.addChild(command("accept", arg("player", ParameterType.PLAYER)));
         party.addChild(command("chat"));
@@ -185,8 +234,6 @@ public class HypixelCommandDispatcher {
         party.addChild(command("settings", arg("setting", ParameterType.STRING, List.of("allinvite", "mute", "private"))));
         party.addChild(command("transfer", arg("player", ParameterType.PLAYER)));
         party.addChild(command("warp"));
-
-
         root.addChild(party);
 
         return root;
