@@ -32,23 +32,25 @@ public class HypixelCommandDispatcher {
 
         String[] tokens = trimmed.split("\\s+");
         boolean endsWithSpace = raw.endsWith(" ");
-        int maxVisited = endsWithSpace ? tokens.length : tokens.length - 1;
 
         CommandNode currentNode = ROOT;
         int commandDepth = 0;
-        for (int i = 0; i < maxVisited; i++) {
-            CommandNode child = currentNode.getChild(tokens[i].toLowerCase(Locale.ROOT));
+        for (String token : tokens) {
+            CommandNode child = currentNode.getChild(token.toLowerCase(Locale.ROOT));
             if (child == null) {
-                return null;
+                break;
             }
             currentNode = child;
             commandDepth++;
         }
 
         String currentWord = endsWithSpace ? "" : tokens[tokens.length - 1];
-        int argIndex = Math.max(0, maxVisited - commandDepth);
+        int consumedArgs = endsWithSpace
+                ? Math.max(0, tokens.length - commandDepth)
+                : Math.max(0, tokens.length - commandDepth - 1);
+        int argIndex = resolveParameterIndex(currentNode, consumedArgs, endsWithSpace);
 
-        if (currentNode.getParameters().size() > 0 && argIndex < currentNode.getParameters().size()) {
+        if (currentNode.getParameters().size() > 0 && argIndex >= 0 && argIndex < currentNode.getParameters().size()) {
             ParameterSpec parameter = currentNode.getParameters().get(argIndex);
             return buildParameterSuggestions(raw, parameter, currentWord);
         }
@@ -63,6 +65,33 @@ public class HypixelCommandDispatcher {
         }
 
         return buildChildSuggestions(currentNode, currentWord, raw);
+    }
+
+    private static int resolveParameterIndex(CommandNode currentNode, int consumedArgs, boolean endsWithSpace) {
+        List<ParameterSpec> params = currentNode.getParameters();
+        if (params.isEmpty()) {
+            return -1;
+        }
+
+        if (endsWithSpace) {
+            ParameterSpec lastParam = params.get(params.size() - 1);
+            if (lastParam.repeatable()) {
+                return Math.min(Math.max(0, consumedArgs), params.size() - 1);
+            }
+            return consumedArgs >= params.size() ? -1 : consumedArgs;
+        }
+
+        if (consumedArgs <= 0) {
+            return 0;
+        }
+
+        int lastIndex = params.size() - 1;
+        ParameterSpec lastParam = params.get(lastIndex);
+        if (lastParam.repeatable()) {
+            return Math.min(consumedArgs, lastIndex);
+        }
+
+        return Math.min(consumedArgs, lastIndex);
     }
 
     private static Suggestions buildParameterSuggestions(String raw, ParameterSpec parameter, String currentWord) {
@@ -106,7 +135,7 @@ public class HypixelCommandDispatcher {
                     .toList();
         }
 
-        if (parameter.type() == ParameterType.PLAYER) {
+        if (parameter.type() == ParameterType.PLAYER || parameter.type() == ParameterType.PLAYER_LIST) {
             Minecraft client = Minecraft.getInstance();
             if (client == null || client.getConnection() == null) {
                 return List.of();
@@ -123,6 +152,28 @@ public class HypixelCommandDispatcher {
             }
             names.sort(String.CASE_INSENSITIVE_ORDER);
             return names;
+        }
+
+        if (parameter.type() == ParameterType.PLAYER_OR_STRING && parameter.values() != null) {
+            List<String> values = new ArrayList<>(parameter.values());
+            if (parameter.type() == ParameterType.PLAYER_OR_STRING) {
+                Minecraft client = Minecraft.getInstance();
+                if (client != null && client.getConnection() != null) {
+                    for (Object playerInfoObj : client.getConnection().getOnlinePlayers()) {
+                        if (playerInfoObj instanceof net.minecraft.client.multiplayer.PlayerInfo playerInfo) {
+                            String name = getProfileName(playerInfo);
+                            if (name != null) {
+                                values.add(name);
+                            }
+                        }
+                    }
+                }
+            }
+            values.sort(String.CASE_INSENSITIVE_ORDER);
+            return values.stream()
+                    .filter(value -> prefix.isEmpty() || value.toLowerCase(Locale.ROOT).startsWith(prefix.toLowerCase(Locale.ROOT)))
+                    .distinct()
+                    .toList();
         }
 
         return List.of();
@@ -190,7 +241,7 @@ public class HypixelCommandDispatcher {
         guild.addChild(command("menu"));
         guild.addChild(command("motd"));
         guild.addChild(command("mute",
-                arg("player", ParameterType.PLAYER),
+                argChoice("target", ParameterType.PLAYER_OR_STRING, List.of("everyone")),
                 arg("time", ParameterType.STRING)));
         guild.addChild(command("mypermissions"));
         guild.addChild(command("notifications"));
@@ -214,7 +265,7 @@ public class HypixelCommandDispatcher {
         guild.addChild(command("toggle"));
         guild.addChild(command("top"));
         guild.addChild(command("transfer", arg("player", ParameterType.PLAYER)));
-        guild.addChild(command("unmute", arg("player", ParameterType.PLAYER)));
+        guild.addChild(command("unmute", argChoice("target", ParameterType.PLAYER_OR_STRING, List.of("everyone"))));
         root.addChild(guild);
 
         CommandNode party = new CommandNode("party");
@@ -222,7 +273,7 @@ public class HypixelCommandDispatcher {
         party.addChild(command("chat"));
         party.addChild(command("demote", arg("player", ParameterType.PLAYER)));
         party.addChild(command("disband"));
-        party.addChild(command("invite", arg("player", ParameterType.PLAYER)));
+        party.addChild(command("invite", repeatableArg("player", ParameterType.PLAYER)));
         party.addChild(command("kick", arg("player", ParameterType.PLAYER)));
         party.addChild(command("kickoffline"));
         party.addChild(command("leave"));
@@ -248,11 +299,20 @@ public class HypixelCommandDispatcher {
     }
 
     private static ParameterSpec arg(String name, ParameterType type) {
-        return new ParameterSpec(name, type, List.of());
+        return new ParameterSpec(name, type, List.of(), false);
     }
 
     private static ParameterSpec arg(String name, ParameterType type, List<String> values) {
-        return new ParameterSpec(name, type, values);
+        return new ParameterSpec(name, type, values, false);
+    }
+
+    private static ParameterSpec argChoice(String name, ParameterType type, List<String> values) {
+        return new ParameterSpec(name, type, values, false);
+    }
+
+    private static ParameterSpec repeatableArg(String name, ParameterType type) {
+        ParameterType actualType = type == ParameterType.PLAYER ? ParameterType.PLAYER_LIST : type;
+        return new ParameterSpec(name, actualType, List.of(), true);
     }
 
     private static final class CommandNode {
@@ -297,11 +357,13 @@ public class HypixelCommandDispatcher {
         }
     }
 
-    private record ParameterSpec(String name, ParameterType type, List<String> values) {
+    private record ParameterSpec(String name, ParameterType type, List<String> values, boolean repeatable) {
     }
 
     private enum ParameterType {
         STRING,
-        PLAYER
+        PLAYER,
+        PLAYER_LIST,
+        PLAYER_OR_STRING
     }
 }
