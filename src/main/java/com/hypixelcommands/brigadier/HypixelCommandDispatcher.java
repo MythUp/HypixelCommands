@@ -207,10 +207,10 @@ public class HypixelCommandDispatcher {
         CommandNode root = new CommandNode("root");
 
         CommandNode chat = new CommandNode("ch", "chat");
-        chat.addChild(command("a", "all"));
-        chat.addChild(command("p", "party"));
-        chat.addChild(command("g", "guild"));
-        chat.addChild(command("o", "online"));
+        chat.addChild(command("all"));
+        chat.addChild(command("party"));
+        chat.addChild(command("guild"));
+        chat.addChild(command("online"));
         root.addChild(chat);
 
         CommandNode friend = new CommandNode("friend");
