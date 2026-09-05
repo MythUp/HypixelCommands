@@ -1,11 +1,11 @@
-name: Build on Release
+name: Build
 
 on:
-  release:
-    types: [published]
+  push:
+  pull_request:
 
 permissions:
-  contents: write
+  contents: read
   packages: read
 
 jobs:
@@ -32,8 +32,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
-
-      - name: Upload mod JAR to release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: build/libs/hypixelcommands-*.jar

@@ -103,7 +103,9 @@ Declare the dependency in the consumer mod's Gradle build:
 ```groovy
 repositories {
     mavenLocal()
-    // Add the Maven repository used for released CommandKit versions.
+    maven {
+        url = uri("https://maven.pkg.github.com/MythUp/CommandKit")
+    }
 }
 
 dependencies {
