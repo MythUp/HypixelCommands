@@ -81,65 +81,6 @@ The mod is deliberately careful not to override normal command completion for co
 
 If a typed command does not match the local Hypixel command tree, the mod does not inject its own suggestions, and the game continues with normal behavior. This prevents broken completions such as stale `friend` suggestions appearing after unrelated commands like `/bedwars`.
 
-## Library API
-
-The `CommandKit` library exposes `CommandCompletion.register(CommandNode)`
-and a fluent `CommandNode`/`CommandArgument` API. Definitions can use aliases,
-nested literals, player and repeatable-player arguments, player-or-literal choices,
-rest-of-message arguments, and `when(Predicate<CompletionContext>)` context
-predicates. The library owns the `CommandSuggestions` mixin and only supplies
-suggestions for active registered definitions.
-
-### Using the library from another Fabric mod
-
-The library is published with the Maven coordinates:
-
-```text
-com.mythup:commandkit:1.0.0+26.2
-```
-
-Declare the dependency in the consumer mod's Gradle build:
-
-```groovy
-repositories {
-    mavenLocal()
-    maven {
-        url = uri("https://maven.pkg.github.com/MythUp/CommandKit")
-    }
-}
-
-dependencies {
-    implementation "com.mythup:commandkit:1.0.0+26.2"
-}
-```
-
-The library must also be installed as a separate Fabric mod jar at runtime. A
-consumer registers only its own command definitions:
-
-```java
-CommandNode language = new CommandNode("lang", "language")
-        .then(new CommandNode("english", "french", "german"));
-
-language.when(context -> {
-    String address = context.serverAddress();
-    return address != null && address.endsWith("example.net");
-});
-
-CommandCompletion.register(language);
-```
-
-The consumer does not need to add another `CommandSuggestions` mixin. The
-library owns that integration and keeps native completion intact whenever no
-active local definition matches.
-
-## Project layout
-
-Key pieces of the implementation include:
-
-- `CommandKit/` — separately publishable generic completion library and mixin
-- `HypixelCommandsMod` — Fabric client entry point and Hypixel detection
-- `HypixelCommandDispatcher` — Hypixel-only command definitions (compatibility facade)
-
 ## Development status
 
 This project is focused on improving client-side command completion for Hypixel commands, with emphasis on correctness, compatibility, and preserving the normal Minecraft chat/Tab flow.
