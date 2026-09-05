@@ -12,7 +12,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.hypixelcommands.HypixelCommandsMod"
+      "com.mythup.hypixelcommands.HypixelCommandsMod"
     ]
   },
   "depends": {

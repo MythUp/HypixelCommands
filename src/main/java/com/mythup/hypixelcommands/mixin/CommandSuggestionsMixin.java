@@ -1,7 +1,7 @@
-package com.hypixelcommands.mixin;
+package com.mythup.hypixelcommands.mixin;
 
-import com.hypixelcommands.HypixelCommandsMod;
-import com.hypixelcommands.brigadier.HypixelCommandDispatcher;
+import com.mythup.hypixelcommands.HypixelCommandsMod;
+import com.mythup.hypixelcommands.brigadier.HypixelCommandDispatcher;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import net.minecraft.client.Minecraft;

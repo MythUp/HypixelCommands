@@ -1,8 +1,8 @@
-package com.hypixelcommands;
+package com.mythup.hypixelcommands;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.Minecraft;
-import com.hypixelcommands.brigadier.HypixelCommandDispatcher;
+import com.mythup.hypixelcommands.brigadier.HypixelCommandDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

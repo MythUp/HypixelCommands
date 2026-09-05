@@ -1,9 +1,9 @@
-package com.hypixelcommands.brigadier;
+package com.mythup.hypixelcommands.brigadier;
 
-import com.hypixelcommands.HypixelCommandsMod;
-import com.hypixelcommands.commandkit.CommandArgument;
-import com.hypixelcommands.commandkit.CommandCompletion;
-import com.hypixelcommands.commandkit.CommandNode;
+import com.mythup.hypixelcommands.HypixelCommandsMod;
+import com.mythup.commandkit.CommandArgument;
+import com.mythup.commandkit.CommandCompletion;
+import com.mythup.commandkit.CommandNode;
 import com.mojang.brigadier.suggestion.Suggestions;
 
 /**

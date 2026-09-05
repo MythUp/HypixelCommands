@@ -95,7 +95,7 @@ suggestions for active registered definitions.
 The library is published with the Maven coordinates:
 
 ```text
-com.hypixelcommands:commandkit:1.0.0+26.2
+com.mythup:commandkit:1.0.0+26.2
 ```
 
 Declare the dependency in the consumer mod's Gradle build:
@@ -107,7 +107,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.hypixelcommands:commandkit:1.0.0+26.2"
+    implementation "com.mythup:commandkit:1.0.0+26.2"
 }
 ```
 
