@@ -1,5 +1,7 @@
 # Hypixel Commands
 
+[![CurseForge](https://img.shields.io/curseforge/dt/1679294?logo=curseforge&label=CurseForge)](https://www.curseforge.com/minecraft/mc-mods/hypixel-commands)
+
 Hypixel Commands is a Fabric client-only mod for Minecraft 26.2 that improves in-chat command completion on Hypixel by adding local client-side suggestions for Hypixel-specific commands and subcommands. The completion engine is published separately as the `CommandKit` Fabric library mod, so other client mods can register their own definitions.
 
 The mod does not modify the server, does not require any server-side plugin or custom protocol, and does not execute commands automatically. It only enhances the client-side command suggestion pipeline so that the player gets better tab-completion while still sending normal Minecraft commands to Hypixel.
