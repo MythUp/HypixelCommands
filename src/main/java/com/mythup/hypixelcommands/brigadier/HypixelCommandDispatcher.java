@@ -4,7 +4,6 @@ import com.mythup.hypixelcommands.HypixelCommandsMod;
 import com.mythup.commandkit.CommandArgument;
 import com.mythup.commandkit.CommandCompletion;
 import com.mythup.commandkit.CommandNode;
-import com.mojang.brigadier.suggestion.Suggestions;
 
 /**
  * Compatibility facade for the original dispatcher package.
@@ -120,14 +119,6 @@ public final class HypixelCommandDispatcher {
         register(command("status")
                 .then(command("online", "away", "busy", "offline")));
 
-    }
-
-    /**
-     * Retains the old lookup entry point for source and binary consumers.
-     */
-    public static Suggestions getSuggestions(String input) {
-        buildTree();
-        return CommandCompletion.getSuggestions(input);
     }
 
     private static void register(CommandNode command) {

@@ -1,8 +1,0 @@
-{
-  "required": true,
-  "package": "com.mythup.hypixelcommands.mixin",
-  "compatibilityLevel": "JAVA_25",
-  "client": [
-    "CommandSuggestionsMixin"
-  ]
-}
