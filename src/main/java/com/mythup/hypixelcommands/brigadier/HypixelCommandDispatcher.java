@@ -122,7 +122,7 @@ public final class HypixelCommandDispatcher {
     }
 
     private static void register(CommandNode command) {
-        command.when(context -> HypixelCommandsMod.isHypixel());
+            command.when(context -> HypixelCommandsMod.isHypixel()).serverIp("hypixel.net");
         CommandCompletion.register(command);
     }
 
